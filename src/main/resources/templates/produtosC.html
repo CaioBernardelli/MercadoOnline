@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<!-- Formulário para listar produtos que começam com "C" -->
+
+<ul class="list-group mb-4">
+    <li class="list-group-item d-flex justify-content-between align-items-center" th:each="produto : ${produtosC}">
+        <span><strong th:text="${produto.nome}  "></strong> - R$ <span th:text="${produto.preco}"></span></span>
+
+
+    </li>
+</ul>
+</body>
+</html>
+

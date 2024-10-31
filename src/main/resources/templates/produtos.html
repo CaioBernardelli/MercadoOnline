@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Lista de Produtos</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+
+    <!-- Bootstrap CSS via CDN -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Custom CSS -->
+    <link th:href="@{/css/style.css}" rel="stylesheet">
+</head>
+<body>
+<div class="container mt-5">
+    <h1 class="mb-4 text-center">Lista de Produtos</h1>
+
+    <!-- Formulário para adicionar produtos -->
+    <form action="/produtos/adicionar" method="post" class="mb-4 row g-3">
+        <div class="col-md-4">
+            <input type="text" class="form-control" name="nome" placeholder="Nome do Produto" required>
+        </div>
+        <div class="col-md-4">
+            <input type="number" step="0.01" class="form-control" name="preco" placeholder="Preço" required>
+        </div>
+        <div class="col-md-4">
+            <input type="text" class="form-control" name="descricao" placeholder="Descrição" required>
+        </div>
+        <div class="col-md-2">
+            <button type="submit" class="btn btn-primary w-100">Adicionar Produto</button>
+        </div>
+    </form>
+
+    <form action="/produtos/buscar" method="get" class="mb-4 row g-3">
+        <div class="col-md-10">
+            <input type="text" class="form-control" name="nome" placeholder="Buscar por nome do produto" required>
+        </div>
+        <div class="col-md-2">
+            <button type="submit" class="btn btn-primary w-100">Buscar</button>
+        </div>
+    </form>
+    <!-- Lista de produtos -->
+    <ul class="list-group mb-4">
+        <li class="list-group-item d-flex justify-content-between align-items-center" th:each="produto : ${produtos}">
+            <span><strong th:text="${produto.nome}"></strong> - R$ <span th:text="${produto.preco}"></span></span>
+            <form th:action="@{/produtos/deletar/{id}(id=${produto.id})}" method="post" class="d-inline">
+                <button type="submit" class="btn btn-danger btn-sm">Deletar</button>
+            </form>
+            <a th:href="@{/produtos/detalhes/{id}(id=${produto.id})}" class="btn btn-info btn-sm">Descrição</a>
+        </li>
+    </ul>
+
+    <!-- Botão para listar produtos por letra "C" -->
+    <form th:action="@{/produtos/inicial-c}" method="get">
+        <button type="submit" class="btn btn-secondary">Listar Produtos Por "C"</button>
+    </form>
+</div>
+
+
+<script>
+    function limpar(){
+
+    }
+
+
+
+</script>
+
+<!-- Bootstrap JS via CDN -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+
+</html>
