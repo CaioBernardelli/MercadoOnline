@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8">
+  <title>Lista de Categorias</title>
+</head>
+<body>
+
+<h2>Categorias</h2>
+
+<ul>
+  <li th:each="categoria : ${categorias}">
+    <span th:text="${categoria.nome}"></span>
+  </li>
+</ul>
+
+</body>
+</html>

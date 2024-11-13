@@ -3,8 +3,11 @@ package com.example.springfront.controller;
 
 
 
+import com.example.springfront.Error.ResourceNotFoundException;
+import com.example.springfront.model.Categoria;
 import com.example.springfront.model.Produto;
 import com.example.springfront.repository.ProdutoRepository;
+import com.example.springfront.service.CategoriaService;
 import com.example.springfront.service.ProdutoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -24,28 +27,60 @@ public class ProdutoController {
     private ProdutoService produtoService;
 
     @Autowired
-    private ProdutoRepository produtoRepositorio;
+    private CategoriaService categoriaService;
+
 
 
     @GetMapping
     public String listarProdutos(Model model) {
         List<Produto> produtos = produtoService.getProduto();
-        model.addAttribute("produtos", produtos); // Passando a lista de produtos para o template
+        model.addAttribute("produtos", produtos);
+        List<Produto> produtosC = produtoService.ListarporC();
+        model.addAttribute("produtosC",produtosC);
+        List<Categoria> categorias = categoriaService.listarTodas();
+        model.addAttribute("categorias",categorias);
+        // Passando a lista de produtos para o template
         return "produtos"; // Retorna o nome do template (produtos.html)
     }
+
+   @GetMapping("/editar/{id}")
+   public String editar(@PathVariable Long id, Model model){
+       List<Categoria> categorias = categoriaService.listarTodas();
+        Produto produto = produtoService.getProdutoPorId(id);
+        if (produto != null){
+            model.addAttribute("produto",produto);
+            model.addAttribute("categorias",categorias);
+            return "editarProduto";
+
+        }
+       return "redirect:/produtos";
+   }
+
+    @PostMapping("/editar/{id}")
+    public String editarProduto(@ModelAttribute("produtoEditado") Produto produto, @RequestParam("categoriaId") Long categoriaId) {
+        Categoria categoria = categoriaService.buscasPorId(categoriaId);
+        produto.setCategoria(categoria);
+        produtoService.editar(produto);
+        return "redirect:/produtos"; // Redireciona para a página de listagem após adicionar
+    }
+
+
+
 
 
     @GetMapping("/buscar")
     public String filtrarPorNome(@RequestParam ("nome")String nome, Model model){
-        Produto produtosNome  = produtoService.getProdutoPorNome(nome);
-        if(produtosNome != null){
+        List<Produto> produtosNome  = produtoService.getProdutosPorNomes(nome);
+        if (produtosNome != null && !produtosNome.isEmpty()){
             model.addAttribute("produtos",produtosNome );
             return "produtos";
 
         }else {
-            throw new RuntimeException("nome não encontrado");
+            throw new ResourceNotFoundException("nome não encontrado");
         }
     }
+
+
 
 
     @GetMapping("/inicial-c")
@@ -56,23 +91,20 @@ public class ProdutoController {
     }
 
 
-
-
-
     @GetMapping("/detalhes/{id}")
     public String detalhesProduto(@PathVariable Long id, Model model) {
-        Optional<Produto> produto = Optional.ofNullable(produtoService.getProdutoPorId(id));
-        if (produto.isPresent()) {
-            model.addAttribute("produto", produto.get());
+        Produto produto = produtoService.getProdutoPorId(id);
+        if (produto != null) {
+            model.addAttribute("produto", produto);
             return "produtodetalhes";
         }
         return "redirect:/produtos"; // Redireciona caso o produto não seja encontrado
     }
 
-
-
     @PostMapping("/adicionar")
-    public String adicionarProduto(@ModelAttribute("novoProduto") Produto produto) {
+    public String adicionarProduto(@ModelAttribute("novoProduto") Produto produto, @RequestParam("categoriaId") Long categoriaId) {
+        Categoria categoria = categoriaService.buscasPorId(categoriaId);
+        produto.setCategoria(categoria);
         produtoService.inserir(produto);
         return "redirect:/produtos"; // Redireciona para a página de listagem após adicionar
     }
@@ -82,7 +114,5 @@ public class ProdutoController {
         produtoService.apagar(id);
         return "redirect:/produtos"; // Redireciona para a página de listagem após deletar
     }
-
-
     }
 

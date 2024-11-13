@@ -19,4 +19,10 @@ public class Produto {
     private String descricao;
 
     // Getters e Setters
+
+    @ManyToOne
+    @JoinColumn(name = "categoria_id")
+    private Categoria categoria;
+
+
 }

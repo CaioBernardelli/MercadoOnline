@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Editar Produto</title>
+  <!-- Bootstrap CSS via CDN -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+
+<body>
+<div class="container mt-5">
+  <h2 class="text-center mb-4">Editar Produto</h2>
+
+  <!-- Formulário para editar produtos -->
+  <form th:action="@{/produtos/editar/{id}(id=${produto.id})}" method="post" class="row g-3">
+    <!-- Nome do Produto -->
+    <div class="col-md-6">
+      <label for="nome" class="form-label">Nome do Produto</label>
+      <input type="text" id="nome" class="form-control" name="nome" th:value="${produto.nome}" placeholder="Nome do Produto" required>
+    </div>
+
+    <!-- Preço -->
+    <div class="col-md-3">
+      <label for="preco" class="form-label">Preço</label>
+      <input type="number" step="0.01" id="preco" class="form-control" name="preco" th:value="${produto.preco}" placeholder="Preço" required>
+    </div>
+
+    <!-- Categoria -->
+    <div class="col-md-3">
+      <label for="categoria" class="form-label">Categoria</label>
+      <select id="categoria" class="form-select" name="categoriaId" required>
+        <option value="">Selecione uma categoria</option>
+        <option th:each="categoria : ${categorias}"
+                th:value="${categoria.id}"
+                th:text="${categoria.nome}"
+                th:selected="${categoria.id == produto.categoria.id}">
+        </option>
+      </select>
+    </div>
+
+    <!-- Descrição -->
+    <div class="col-12">
+      <label for="descricao" class="form-label">Descrição</label>
+      <textarea id="descricao" class="form-control" name="descricao" rows="3" placeholder="Descrição do Produto" required
+                th:text="${produto.descricao}"></textarea>
+    </div>
+
+    <!-- Botão de Enviar -->
+    <div class="col-12 text-center mt-3">
+      <button type="submit" class="btn btn-primary px-4">Salvar Alterações</button>
+    </div>
+  </form>
+</div>
+
+<!-- Bootstrap JS via CDN -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

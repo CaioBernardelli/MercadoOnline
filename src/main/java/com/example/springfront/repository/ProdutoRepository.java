@@ -16,15 +16,17 @@ public interface ProdutoRepository extends JpaRepository<Produto, Long> {
     @Query("SELECT p FROM Produto p WHERE p.nome LIKE :prefix%")
     List<Produto> findProdutosComecandoCom(@Param("prefix") String prefix);
 
-    @Query("SELECT p.nome FROM Produto p")
-    List<Produto> findPorNome(String nome);
 
     Optional<Produto> findByNome(String nome);
 
 
+    List<Produto> findByNomeContaining(String nome);
+
     Optional<Produto> findByDescricao(String descricao);
 
-   //@Query("SELECT p.descricao FROM Produto p WHERE p.id == id ")
+
+
+   //@Query("SELECT p.descricao FROM Produto p WHERE p.id == id")
 
 
 }

@@ -24,6 +24,9 @@
             <p class="card-text">
                 <strong>Descrição:</strong> <span th:text="${produto.descricao}"></span>
             </p>
+            <p class="card-text">
+                <strong>Categoria:</strong> <span th:text="${produto.categoria.nome}"></span>
+            </p>
 
             <!-- Botão para voltar à lista de produtos -->
             <a href="/produtos" class="btn btn-secondary mt-3">Voltar</a>
